@@ -63,8 +63,8 @@ esp_err_t peripherals_i2c_init(i2c_port_t num, const i2c_config_t *i2c_conf) {
         return err;
     }
     #if ESPRESSIF_I2C_SET_TIMEOUT_PERCENT_OF_MAX
-        int max_timeout = (ESP32_I2C_TIMEOUT_MAX + 1) * ESPRESSIF_I2C_SET_TIMEOUT_PERCENT_OF_MAX / 100;
-        err = i2c_set_timeout(num, max_timeout);
+    int max_timeout = (ESP32_I2C_TIMEOUT_MAX + 1) * ESPRESSIF_I2C_SET_TIMEOUT_PERCENT_OF_MAX / 100;
+    err = i2c_set_timeout(num, max_timeout);
     #endif
 
     return err;

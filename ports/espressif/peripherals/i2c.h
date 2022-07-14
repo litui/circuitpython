@@ -29,6 +29,22 @@
 
 #include "driver/i2c.h"
 
+#ifndef ESPRESSIF_I2C_SET_TIMEOUT_PERCENT_OF_MAX
+#define ESPRESSIF_I2C_SET_TIMEOUT_PERCENT_OF_MAX 66
+#endif
+
+#if ESPRESSIF_I2C_SET_TIMEOUT_PERCENT_OF_MAX
+#include "soc/i2c_reg.h"
+// Determine size of memory location used to store timeout.
+#if defined(I2C_TIME_OUT_REG_M)  // Standard on ESP32
+    #define ESP32_I2C_TIMEOUT_MAX I2C_TIME_OUT_REG_M
+#elif defined(I2C_TIME_OUT_VALUE_M)  // ESP32 S3, possibly others.
+    #define ESP32_I2C_TIMEOUT_MAX I2C_TIME_OUT_VALUE_M
+#else
+    #define ESP32_I2C_TIMEOUT_MAX 1048576;  // Assume same values as basic ESP32.
+#endif // defined(I2C_TIME_OUT_REG_M)
+#endif // ESPRESSIF_I2C_SET_TIMEOUT_PERCENT_OF_MAX
+
 extern void i2c_reset(void);
 extern void never_reset_i2c(i2c_port_t num);
 extern esp_err_t peripherals_i2c_init(i2c_port_t num, const i2c_config_t *i2c_conf);

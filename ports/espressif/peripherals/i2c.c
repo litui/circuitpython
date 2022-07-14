@@ -58,7 +58,16 @@ esp_err_t peripherals_i2c_init(i2c_port_t num, const i2c_config_t *i2c_conf) {
         rx_buf_len = 256;
         tx_buf_len = 256;
     }
-    return i2c_driver_install(num, i2c_conf->mode, rx_buf_len, tx_buf_len, 0);
+    err = i2c_driver_install(num, i2c_conf->mode, rx_buf_len, tx_buf_len, 0);
+    if (err != ESP_OK) {
+        return err;
+    }
+    #if ESPRESSIF_I2C_SET_TIMEOUT_PERCENT_OF_MAX
+        int max_timeout = (ESP32_I2C_TIMEOUT_MAX + 1) * ESPRESSIF_I2C_SET_TIMEOUT_PERCENT_OF_MAX / 100;
+        err = i2c_set_timeout(num, max_timeout);
+    #endif
+
+    return err;
 }
 
 void peripherals_i2c_deinit(i2c_port_t num) {
